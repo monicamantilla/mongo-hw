@@ -1,36 +1,34 @@
 var mongoose = require("mongoose");
 
+
 var Schema = mongoose.Schema;
 
+// Using the Schema constructor, create a new UserSchema object
+
 var ArticleSchema = new Schema({
- 
+  
   title: {
     type: String,
     required: true
   },
-  image: {
+
+  link: {
     type: String,
     required: true
   },
-  a:{
-    type: String,
-    required: true
-  },
-  summary: {
-    type: String,
-    required: true
-  },
-  saved: {
-    type: Boolean
-  },
-  notes:[ {
+ 
+  // summary: {
+  //   type: String,
+  //   required: true
+  // },
+
+  note: {
     type: Schema.Types.ObjectId,
     ref: "Note"
-  }]
+  }
 });
 
-// This creates our model from the above schema, using mongoose's model method
+// model
 var Article = mongoose.model("Article", ArticleSchema);
 
-// Export the Article model
 module.exports = Article;

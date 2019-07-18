@@ -1,22 +1,26 @@
-
-<div class="container" id="main">
-    <div class="section">
-        <div id="articles">
-
-        </div>
+{{!-- <div>
+    <h1 class="card z-depth-3 center-align">Read the latest news</h1>
+    <div class="row">
+        <div class="col s3"></div>
+        <h5 class="card z-depth-3 center-align col s6">Click Scrape to get the latest articles</h5>
     </div>
 </div>
+ <div class="row">
+<div class="col s2"></div>
+<div class="col s8 left-align">
+    {{#each article}}
+    <div class="card-panel">
+        <h4>{{this.title}}</h4>
+        <a href="/readArticle/{{this._id}}" class="waves-effect waves-light btn" id="btnSignUp">Read Article</a>
+    </div>
+    {{/each}}
+</div>
 
-<script>
+ </div> --}}
 
-    $(".button").on("click", function () {
-        $.get("/articles").done(function (data){
 
-            for(var i = 0; i < data.length; i++){
-
-                var newCard = $("<div class='row'><div class='col s12 m7 offset-l3 l6'><div class='card'><div class='card-image'><img src='" + data[i].image + "'></div><div class='center-align card-content'><p class='card-title'><a href='" + data[i].a + "'>" + data[i].title + "</a></p><p>" + data[i].summary + "</p></div><div class='center-align card-action'><a id='saveArticle' class='btn saveArticle' data-savearticleid='" + data[i]._id + "'>Save Article</a></div></div></div></div>")
-                $(".container").append(newCard) 
-            }
-        })
-    })
-</script>
+ <div id="wrapper">
+  <h1>Note Scraper</h1>
+  <div id="articles"></div>
+  <div id="notes"></div>
+</div>
