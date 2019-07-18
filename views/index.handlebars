@@ -1,0 +1,22 @@
+
+<div class="container" id="main">
+    <div class="section">
+        <div id="articles">
+
+        </div>
+    </div>
+</div>
+
+<script>
+
+    $(".button").on("click", function () {
+        $.get("/articles").done(function (data){
+
+            for(var i = 0; i < data.length; i++){
+
+                var newCard = $("<div class='row'><div class='col s12 m7 offset-l3 l6'><div class='card'><div class='card-image'><img src='" + data[i].image + "'></div><div class='center-align card-content'><p class='card-title'><a href='" + data[i].a + "'>" + data[i].title + "</a></p><p>" + data[i].summary + "</p></div><div class='center-align card-action'><a id='saveArticle' class='btn saveArticle' data-savearticleid='" + data[i]._id + "'>Save Article</a></div></div></div></div>")
+                $(".container").append(newCard) 
+            }
+        })
+    })
+</script>
