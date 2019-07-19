@@ -1,11 +1,11 @@
-const   express = require("express"),
-        bodyParser = require("body-parser"),
-        logger = require("morgan"),
-        mongoose = require("mongoose"),
-        path = require("path"),
-        axios = require("axios"),
-        cheerio = require("cheerio"),
-        exphbs = require("express-handlebars");
+const express = require("express"),
+    bodyParser = require("body-parser"),
+    logger = require("morgan"),
+    mongoose = require("mongoose"),
+    path = require("path"),
+    axios = require("axios"),
+    cheerio = require("cheerio"),
+    exphbs = require("express-handlebars");
 
 //Require Models
 const Note = require("./models/Note");
@@ -102,23 +102,23 @@ app.get("/scrape", function (req, res) {
             var result = {};
 
             result.title = $(this).children(".post-block__header").children("h2").children("a").text().trim();
-   
+
             result.summary = $(this).children(".post-block__content").text().trim();
             result.link = $(this).children(".post-block__header").children("h2").children("a").attr("href");
             result.imgUrl = $(this).children(".post-block__footer").children(".post-block__media").children("a").children("img").attr("src");
             // console.log( result);
-           
+
             var entry = new Article(result);
 
-            // Now, save that entry to the db
+
             entry.save(function (err, doc) {
-                //Log any errors
+
 
                 if (err) {
 
                     console.log(err);
                 }
-                //or log the doc
+
                 else {
                     console.log("This is doc: " + doc);
                 }
@@ -127,15 +127,15 @@ app.get("/scrape", function (req, res) {
         });
         res.send("Scrape Complete");
     });
-    // Tell the browser that we finished scraping the text 
+
 });
 
-// This will get the articles we scraped from the mongoDB
+
 
 app.get("/articles", function (req, res) {
-    //Grab every doc in the Articles array
+
     Article.find({}, function (error, doc) {
-        //log any errors
+
         if (error) {
             console.log(error);
         }
@@ -147,12 +147,10 @@ app.get("/articles", function (req, res) {
 
 //Grab an article by it's ObjectId
 app.get("/articles/:id", function (req, res) {
-    //Using the id passed in the id parameter, prepare a query that finds 
-    //the matching one in our db ..
+
     Article.findOne({ "_id": req.params.id })
-        //.. and populate all of the notes associated with it  "notes"
         .populate("note")
-        // now, execute our query
+
         .exec(function (error, doc) {
             //log any errors
             if (error) {
@@ -166,35 +164,33 @@ app.get("/articles/:id", function (req, res) {
         });
 });
 
-// Save an article
+// Save article
 app.post("/articles/save/:id", function (req, res) {
-    //Use the article id to find an update its saved boolean
     Article.findOneAndUpdate({ "_id": req.params.id }, { "saved": true })
-        //execute the above query
+
         .exec(function (err, doc) {
-            // log any errors
+
             if (err) {
                 console.log(err);
             }
             else {
-                //send the document to the browser
+
                 res.send(doc);
             }
         });
 });
 
-//Delete an article
+//Delete article
 app.post("/articles/delete/:id", function (req, res) {
-    //Use the article id to find and update its saved boolean
     Article.findOneAndUpdate({ "_id": req.params.id }, { "saved": false, "notes": [] })
-        //Execute the above query
+
         .exec(function (err, doc) {
-            //Log any errors
+
             if (err) {
                 console.log(err);
             }
             else {
-                //Or send the document to the browser
+
                 res.send(doc);
             }
         });
@@ -202,7 +198,6 @@ app.post("/articles/delete/:id", function (req, res) {
 
 // Create a new note
 app.post("/notes/save/:id", function (req, res) {
-    // create a new note and pass the req.body to the entry
     let newNote = new Note({
         body: req.body.text,
         article: req.params.id
@@ -216,17 +211,16 @@ app.post("/notes/save/:id", function (req, res) {
         }
         //Otherwise
         else {
-            //Use the article id to find and update its notes
             Article.findOneAndUpdate({ "_id": req.params.id }, { $push: { "notes": note } })
-                // Execute teh above query
+
                 .exec(function (err) {
-                    //Log any errors
+
                     if (err) {
                         console.log(err);
                         res.send(err);
                     }
                     else {
-                        //Or send the note to the browser
+
                         res.send(note);
                     }
                 });
@@ -236,7 +230,6 @@ app.post("/notes/save/:id", function (req, res) {
 
 // Delete a note
 app.delete("/notes/delete/:note_id/:article_id", function (req, res) {
-    //Use the note id to find and delete it
     Note.findOneAndRemove({ "_id": req.params.note_id }, function (err) {
         //Log any errors
         if (err) {
@@ -251,7 +244,6 @@ app.delete("/notes/delete/:note_id/:article_id", function (req, res) {
                         res.send(err);
                     }
                     else {
-                        //or send the note to the browser
                         res.send("Note Deleted");
                     }
                 });
